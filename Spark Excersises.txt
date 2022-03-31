@@ -1,0 +1,753 @@
+1. Exercise: Finding Ids of Rows with Word in Array Column
+
+	Develop a standalone Spark application that finds the ids of the rows that have values of one column in an array column.
+	
+	Input Dataset: (CSV File)
+	
+	id,words,word
+	1,"one,two,three",one
+	2,"four,one,five",six
+	3,"seven,nine,one,two",eight
+	4,"two,three,five",five
+	5,"six,five,one",seven
+	
+	+---+------------------+-----+
+	| id|             words| word|
+	+---+------------------+-----+
+	|  1|     one,two,three|  one|
+	|  2|     four,one,five|  six|
+	|  3|seven,nine,one,two|eight|
+	|  4|    two,three,five| five|
+	|  5|      six,five,one|seven|
+	+---+------------------+-----+
+	
+	
+	Expected Output:
+	
+	+-----+------------+
+	|    w|         ids|
+	+-----+------------+
+	| five|   [2, 4, 5]|
+	|  one|[1, 2, 3, 5]|
+	|seven|         [3]|
+	|  six|         [5]|
+	+-----+------------+
+	
+	The word “one” is in the rows with the ids 1, 2, 3 and 5.
+
+	The word “seven” is in the row with the id 3.
+	
+	Tip: Use "split" and "explode"
+	
+	
+2. Exercise: Finding Most Populated Cities Per Country
+
+	Write Spark code that gives the most populated cities per country with the population.
+	
+	Input Dataset: (CSV File)
+	
+	name,country,population
+	Warsaw,Poland,1 764 615
+	Cracow,Poland,769 498
+	Paris,France,2 206 488
+	Villeneuve-Loubet,France,15 020
+	Pittsburgh PA,United States,302 407
+	Chicago IL,United States,2 716 000
+	Milwaukee WI,United States,595 351
+	Vilnius,Lithuania,580 020
+	Stockholm,Sweden,972 647
+	Goteborg,Sweden,580 020
+	
+	+-----------------+-------------+----------+
+	|             name|      country|population|
+	+-----------------+-------------+----------+
+	|           Warsaw|       Poland| 1 764 615|
+	|           Cracow|       Poland|   769 498|
+	|            Paris|       France| 2 206 488|
+	|Villeneuve-Loubet|       France|    15 020|
+	|    Pittsburgh PA|United States|   302 407|
+	|       Chicago IL|United States| 2 716 000|
+	|     Milwaukee WI|United States|   595 351|
+	|          Vilnius|    Lithuania|   580 020|
+	|        Stockholm|       Sweden|   972 647|
+	|         Goteborg|       Sweden|   580 020|
+	+-----------------+-------------+----------+
+	
+	Note to Consider: Population column in input dataset is of type string and contains spaces.
+	
+	
+	Expected Result:
+	
+	+----------+-------------+----------+
+	|      name|      country|population|
+	+----------+-------------+----------+
+	|    Warsaw|       Poland| 1 764 615|
+	|     Paris|       France| 2 206 488|
+	|Chicago IL|United States| 2 716 000|
+	|   Vilnius|    Lithuania|   580 020|
+	| Stockholm|       Sweden|   972 647|
+	+----------+-------------+----------+
+	
+	Tip: You can use "groupBy" and "max" spark function followed by "join"
+	
+	
+3. Exercise: Difference in Days Between Dates As Strings
+
+	Write spark code that calculates the number of days between dates given as text (in some format) and the current date.
+	
+	Input Dataframe:
+	
+	+-----------+
+	|date_string|
+	+-----------+
+	| 08/11/2015|
+	| 09/11/2015|
+	| 09/12/2015|
+	+-----------+
+	
+	Expected Result:
+	
+	+-----------+----------+----+
+	|date_string|   to_date|diff|
+	+-----------+----------+----+
+	| 08/11/2015|<currt_dt>|1256|
+	| 09/11/2015|<currt_dt>|1255|
+	| 09/12/2015|<currt_dt>|1225|
+	+-----------+----------+----+
+	
+	
+	NOTE: The diff column is current_date-sensitive and your result will certainly be different
+	
+	Tip: Spark standard functions "to_date" and "datediff" can be used
+	
+	
+4. Exercise: Counting Occurrences Of Years and Months For 24 Months From Now
+	
+	Write Spark code that calculates the occurrences of years and months for the past 24 months (2 years).
+
+	The query is supposed to include occurrences (as 0s) for the missing months and years (that are time gaps in the input dataset).
+
+	The query is supposed to calculate a result for the last 24 months from the date of execution. Months and years older than 24 months from now should simply be excluded from the result
+	
+	
+	Input Dataset: (CSV File)
+	
+	YEAR_MONTH,AMOUNT
+	202001,500
+	202001,600
+	201912,100
+	201910,200
+	201910,100
+	201909,400
+	201601,5000
+	
+	
+	+----------+------+
+	|YEAR_MONTH|AMOUNT|
+	+----------+------+
+	|    202001|   500|
+	|    202001|   600|
+	|    201912|   100|
+	|    201910|   200|
+	|    201910|   100|
+	|    201909|   400|
+	|    201601|  5000|
+	+----------+------+
+	
+	
+	
+	Expected Result:
+	
+	+----------+------+
+	|year_month|amount|
+	+----------+------+
+	|202001    |1100  |
+	|201912    |100   |
+	|201911    |0     |
+	|201910    |300   |
+	|201909    |400   |
+	|201908    |0     |
+	|201907    |0     |
+	...
+	|201804    |0     |
+	|201803    |0     |
+	+----------+------+
+	
+	Tip: Standard "data and time" functions can be used.
+	
+	
+5. Exercise: How to add days (as values of a column) to date?
+
+	Write Spark code that adds a given number of days (from one column) to a date (from another column) and prints out the rows to the standard output.
+	
+	
+	Input Dataset: (CSV File)
+	
+	0,"2016-01-1"
+	1,"2016-02-2"
+	2,"2016-03-22"
+	3,"2016-04-25"
+	4,"2016-05-21"
+	5,"2016-06-1",
+	6,"2016-03-21"
+	
+	+--------------+----------+
+	|number_of_days|date      |
+	+--------------+----------+
+	|0             |2016-01-1 |
+	|1             |2016-02-2 |
+	|2             |2016-03-22|
+	|3             |2016-04-25|
+	|4             |2016-05-21|
+	|5             |2016-06-1 |
+	|6             |2016-03-21|
+	+--------------+----------+
+	
+	
+	Expected Result:
+	
+	+--------------+----------+----------+
+	|number_of_days|      date|    future|
+	+--------------+----------+----------+
+	|             0| 2016-01-1|2016-01-01|
+	|             1| 2016-02-2|2016-02-03|
+	|             2|2016-03-22|2016-03-24|
+	|             3|2016-04-25|2016-04-28|
+	|             4|2016-05-21|2016-05-25|
+	|             5| 2016-06-1|2016-06-06|
+	|             6|2016-03-21|2016-03-27|
+	+--------------+----------+----------+
+	
+	Tip: Standard function "date_add" can be used.
+	
+	
+	
+6. Exercise: Finding maximum values per group (groupBy)
+
+	Write Spark code that finds the highest (maximum) numbers per group.
+	
+	Input Dataset:
+	
+	+---+-----+
+	| id|group|
+	+---+-----+
+	|  0|    0|
+	|  1|    1|
+	|  2|    0|
+	|  3|    1|
+	|  4|    0|
+	+---+-----+
+	
+	Expected Result:
+	
+	+-----+------+
+	|group|max_id|
+	+-----+------+
+	|    0|     4|
+	|    1|     3|
+	+-----+------+
+	
+	Tip: "groupBy" and "max" functions can be used.
+	
+	
+7. Exercise: Calculating Gap Between Current And Highest Salaries Per Department
+
+	Write Spark code that shows the difference in salaries between the top-paid employee and others per department. In other words, we want to know how much more the highest-paid employee gets compared to other teammates.
+
+	The exercise could also be described as “Calculating the gap between the current book and the bestseller per genre” (given the other exercise with book sales and bestsellers).
+	
+	
+	Sub Questions:
+	
+	How does orderBy influence the result? Why?
+	Think about the number of rows included in a window (mind rangeBetween)
+	
+	
+	Input Dataset: (CSV File)
+	
+	id,name,department,salary
+	1,Hunter Fields,IT,15
+	2,Leonard Lewis,Support,81
+	3,Jason Dawson,Support,90
+	4,Andre Grant,Support,25
+	5,Earl Walton,IT,40
+	6,Alan Hanson,IT,24
+	7,Clyde Matthews,Support,31
+	8,Josephine Leonard,Support,1
+	9,Owen Boone,HR,27
+	10,Max McBride,IT,75
+	
+	
+	+---+-----------------+----------+------+
+	| id|             name|department|salary|
+	+---+-----------------+----------+------+
+	|  1|    Hunter Fields|        IT|    15|
+	|  2|    Leonard Lewis|   Support|    81|
+	|  3|     Jason Dawson|   Support|    90|
+	|  4|      Andre Grant|   Support|    25|
+	|  5|      Earl Walton|        IT|    40|
+	|  6|      Alan Hanson|        IT|    24|
+	|  7|   Clyde Matthews|   Support|    31|
+	|  8|Josephine Leonard|   Support|     1|
+	|  9|       Owen Boone|        HR|    27|
+	| 10|      Max McBride|        IT|    75|
+	+---+-----------------+----------+------+
+	
+	Expected Result:
+	
+	+---+-----------------+----------+------+----+
+	| id|             name|department|salary|diff|
+	+---+-----------------+----------+------+----+
+	|  9|       Owen Boone|        HR|    27|   0|
+	|  1|    Hunter Fields|        IT|    15|  60|
+	|  5|      Earl Walton|        IT|    40|  35|
+	|  6|      Alan Hanson|        IT|    24|  51|
+	| 10|      Max McBride|        IT|    75|   0|
+	|  2|    Leonard Lewis|   Support|    81|   9|
+	|  3|     Jason Dawson|   Support|    90|   0|
+	|  4|      Andre Grant|   Support|    25|  65|
+	|  7|   Clyde Matthews|   Support|    31|  59|
+	|  8|Josephine Leonard|   Support|     1|  89|
+	+---+-----------------+----------+------+----+
+	
+	
+	Tip: "max" and "first" Standard functions can be used.
+	
+
+8. Exercise: Calculating Running Total / Cumulative Sum
+
+	Write Spark code that calculates running total (aka cumulative sum or partial sum) of items sold over time per department.
+
+	From Wikipedia:
+
+	A running total is the summation of a sequence of numbers which is updated each time a new number is added to the sequence, by adding the value of the new number to the previous running total.
+	
+	
+	Input Dataset:
+	
+	time,department,items_sold
+	1,IT,15
+	2,Support,81
+	3,Support,90
+	4,Support,25
+	5,IT,40
+	6,IT,24
+	7,Support,31
+	8,Support,1
+	9,HR,27
+	10,IT,75
+	
+	
+	+----+----------+----------+
+	|time|department|items_sold|
+	+----+----------+----------+
+	|   1|        IT|        15|
+	|   2|   Support|        81|
+	|   3|   Support|        90|
+	|   4|   Support|        25|
+	|   5|        IT|        40|
+	|   6|        IT|        24|
+	|   7|   Support|        31|
+	|   8|   Support|         1|
+	|   9|        HR|        27|
+	|  10|        IT|        75|
+	+----+----------+----------+
+	
+	
+	Expected Result:
+	
+	+----+----------+----------+-------------+
+	|time|department|items_sold|running_total|
+	+----+----------+----------+-------------+
+	|   9|        HR|        27|           27|
+	|   1|        IT|        15|           15|
+	|   5|        IT|        40|           55|
+	|   6|        IT|        24|           79|
+	|  10|        IT|        75|          154|
+	|   2|   Support|        81|           81|
+	|   3|   Support|        90|          171|
+	|   4|   Support|        25|          196|
+	|   7|   Support|        31|          227|
+	|   8|   Support|         1|          228|
+	+----+----------+----------+-------------+
+	
+	
+9. Exercise: Calculating Difference Between Consecutive Rows Per Window
+
+	Write Spark Code that calculates the difference between consecutive running_total rows over time per department.
+	
+	Input Dataset: (CSV File)
+	
+	time,department,items_sold,running_total
+	1,IT,15,15
+	2,Support,81,81
+	3,Support,90,171
+	4,Support,25,196
+	5,IT,40,55
+	6,IT,24,79
+	7,Support,31,227
+	8,Support,1,228
+	9,HR,27,27
+	10,IT,75,154
+	
+	
+	+----+----------+----------+-------------+
+	|time|department|items_sold|running_total|
+	+----+----------+----------+-------------+
+	|   1|        IT|        15|           15|
+	|   2|   Support|        81|           81|
+	|   3|   Support|        90|          171|
+	|   4|   Support|        25|          196|
+	|   5|        IT|        40|           55|
+	|   6|        IT|        24|           79|
+	|   7|   Support|        31|          227|
+	|   8|   Support|         1|          228|
+	|   9|        HR|        27|           27|
+	|  10|        IT|        75|          154|
+	+----+----------+----------+-------------+
+	
+	
+	Expected Result:
+	
+	+----+----------+----------+-------------+----+
+	|time|department|items_sold|running_total|diff|
+	+----+----------+----------+-------------+----+
+	|   9|        HR|        27|           27|  27|
+	|   1|        IT|        15|           15|  15|
+	|   5|        IT|        40|           55|  40|
+	|   6|        IT|        24|           79|  24|
+	|  10|        IT|        75|          154|  75|
+	|   2|   Support|        81|           81|  81|
+	|   3|   Support|        90|          171|  90|
+	|   4|   Support|        25|          196|  25|
+	|   7|   Support|        31|          227|  31|
+	|   8|   Support|         1|          228|   1|
+	+----+----------+----------+-------------+----+
+	
+	Tip: spark standard function "lag" can be used.
+	
+	
+10. Exercise: Calculating percent rank
+
+	A dataset has employees and salaries entries in no particular order. Write a structured query that adds a new column per the following requirements:
+
+	1. Top 30% gets a value “high”
+	2. The next 40% gets “average”
+	3. The rest gets “low”
+	
+	
+	Input Dataset:
+	
+	Employee,Salary
+	Tony,50
+	Alan,45
+	Lee,60
+	David,35
+	Steve,65
+	Paul,48
+	Micky,62
+	George,80
+	Nigel,64
+	John,42
+	
+	+--------+------+
+	|Employee|Salary|
+	+--------+------+
+	|    Tony|    50|
+	|    Alan|    45|
+	|     Lee|    60|
+	|   David|    35|
+	|   Steve|    65|
+	|    Paul|    48|
+	|   Micky|    62|
+	|  George|    80|
+	|   Nigel|    64|
+	|    John|    42|
+	+--------+------+
+	
+	
+	Expected Output:
+	
+	+--------+------+----------+
+	|Employee|Salary|Percentage|
+	+--------+------+----------+
+	|  George|    80|      High|
+	|   Steve|    65|      High|
+	|   Nigel|    64|      High|
+	|   Micky|    62|      High|
+	|     Lee|    60|   Average|
+	|    Tony|    50|       Low|
+	|    Paul|    48|       Low|
+	|    Alan|    45|       Low|
+	|    John|    42|       Low|
+	|   David|    35|       Low|
+	+--------+------+----------+
+	
+	Tip: "percent_rank" window aggregation followed by "when" standard function with API's "when" and "otherwise" methods.
+	
+	
+11. Exercise: Finding Longest Sequence (Window Aggregation)
+
+	Write Spark Code that finds the longest sequence of consecutive numbers.
+	
+	Input Dataset:
+	
+	ID,time
+	1,1
+	1,2
+	1,4
+	1,7
+	1,8
+	1,9
+	2,1
+	3,1
+	3,2
+	3,3
+	
+	+---+----+
+	| ID|time|
+	+---+----+
+	|  1|   1|
+	|  1|   2|
+	|  1|   4|
+	|  1|   7|
+	|  1|   8|
+	|  1|   9|
+	|  2|   1|
+	|  3|   1|
+	|  3|   2|
+	|  3|   3|
+	+---+----+
+	
+	Expected Result:
+	
+	+---+----+
+	| ID|time|
+	+---+----+
+	|  1|   3|
+	|  2|   1|
+	|  3|   3|
+	+---+----+
+	
+	Tip: "rank" standard function followed by "groupBy" operator to count same ranks.
+	
+	
+12. Exercise: Finding Most Common Non-null Prefix per Group (Occurences)
+
+	Write Spark Code that finds the most common not-null PREFIX (occurences) per UNIQUE_GUEST_ID
+	
+	Input Dataset:
+	
+	+---------------+------+
+	|UNIQUE_GUEST_ID|PREFIX|
+	+---------------+------+
+	|              1|    Mr|
+	|              1|   Mme|
+	|              1|    Mr|
+	|              1|  null|
+	|              1|  null|
+	|              1|  null|
+	|              2|    Mr|
+	|              3|  null|
+	+---------------+------+
+	
+	Expected Result:
+	
+	+---------------+------+
+	|UNIQUE_GUEST_ID|PREFIX|
+	+---------------+------+
+	|              1|    Mr|
+	|              2|    Mr|
+	|              3|  null|
+	+---------------+------+
+	
+	
+13. Exercise: Using rollup Operator for Total and Average Salaries by Department and Company-Wide
+
+	Write Spark Code that calculates total and average salaries by department and company-wide (using rollup multi-dimentional aggregation operator).
+	
+	
+	Input Dataset:
+	
+	id,name,department,salary
+	1,Hunter Fields,IT,15
+	2,Leonard Lewis,Support,81
+	3,Jason Dawson,Support,90
+	4,Andre Grant,Support,25
+	5,Earl Walton,IT,40
+	6,Alan Hanson,IT,24
+	7,Clyde Matthews,Support,31
+	8,Josephine Leonard,Support,1
+	9,Owen Boone,HR,27
+	10,Max McBride,IT,75
+	
+	
+	+---+-----------------+----------+------+
+	| id|             name|department|salary|
+	+---+-----------------+----------+------+
+	|  1|    Hunter Fields|        IT|    15|
+	|  2|    Leonard Lewis|   Support|    81|
+	|  3|     Jason Dawson|   Support|    90|
+	|  4|      Andre Grant|   Support|    25|
+	|  5|      Earl Walton|        IT|    40|
+	|  6|      Alan Hanson|        IT|    24|
+	|  7|   Clyde Matthews|   Support|    31|
+	|  8|Josephine Leonard|   Support|     1|
+	|  9|       Owen Boone|        HR|    27|
+	| 10|      Max McBride|        IT|    75|
+	+---+-----------------+----------+------+
+	
+	
+	Expected Result:
+	
+	+----------+---+----+
+	|department|sum| avg|
+	+----------+---+----+
+	|      null|409|40.9|
+	|   Support|228|45.6|
+	|        IT|154|38.5|
+	|        HR| 27|27.0|
+	+----------+---+----+
+	
+	
+14. Exercise: Structs for column names and values
+
+	Write Spark Code that “transpose” a dataset so a new dataset uses column names and values from a struct column.
+	
+	Input Dataset:
+	
+	+------+--------------------------------------------------+
+	|name  |movieRatings                                      |
+	+------+--------------------------------------------------+
+	|Manuel|[[Logan, 1.5], [Zoolander, 3.0], [John Wick, 2.5]]|
+	|John  |[[Logan, 2.0], [Zoolander, 3.5], [John Wick, 3.0]]|
+	+------+--------------------------------------------------+
+
+	Expected Result:
+	
+	+------+-----+---------+---------+
+	|name  |Logan|Zoolander|John Wick|
+	+------+-----+---------+---------+
+	|Manuel|1.5  |3.0      |2.5      |
+	|John  |2.0  |3.5      |3.0      |
+	+------+-----+---------+---------+
+	
+
+15. Exercise: Merging two rows
+
+	Write Spark Code that “merges” two rows of the same id (to replace nulls).
+	
+	+---+-----+----+--------+
+	| id| name| age|    city|
+	+---+-----+----+--------+
+	|100| John|  35|    null|
+	|100| John|null| Georgia|
+	|101| Mike|  25|    null|
+	|101| Mike|null|New York|
+	|103| Mary|  22|    null|
+	|103| Mary|null|   Texas|
+	|104|Smith|  25|    null|
+	|105| Jake|null| Florida|
+	+---+-----+----+--------+
+	
+	Expected Result:
+	
+	+---+-----+----+--------+
+	|id |name |age |city    |
+	+---+-----+----+--------+
+	|100|John |35  |Georgia |
+	|101|Mike |25  |New York|
+	|103|Mary |22  |Texas   |
+	|104|Smith|25  |null    |
+	|105|Jake |null|Florida |
+	+---+-----+----+--------+
+	
+	
+16. Exercise: Exploding structs array
+
+	Write Spark Code that “explodes” an array of structs (of open and close hours).
+	
+	Input Dataset: (JSON File)
+	
+	{
+	  "business_id": "abc",
+	  "full_address": "random_address",
+	  "hours": {
+		"Monday": {
+		  "close": "02:00",
+		  "open": "11:00"
+		},
+		"Tuesday": {
+		  "close": "02:00",
+		  "open": "11:00"
+		},
+		"Friday": {
+		  "close": "02:00",
+		  "open": "11:00"
+		},
+		"Wednesday": {
+		  "close": "02:00",
+		  "open": "11:00"
+		},
+		"Thursday": {
+		  "close": "02:00",
+		  "open": "11:00"
+		},
+		"Sunday": {
+		  "close": "00:00",
+		  "open": "11:00"
+		},
+		"Saturday": {
+		  "close": "02:00",
+		  "open": "11:00"
+		}
+	  }
+	}
+	
+	+-----------+--------------+----------------------------------------------------------------------------------------------------------------+
+	|business_id|full_address  |hours                                                                                                           |
+	+-----------+--------------+----------------------------------------------------------------------------------------------------------------+
+	|abc        |random_address|[[02:00, 11:00], [02:00, 11:00], [02:00, 11:00], [00:00, 11:00], [02:00, 11:00], [02:00, 11:00], [02:00, 11:00]]|
+	+-----------+--------------+----------------------------------------------------------------------------------------------------------------+
+	
+	
+	Expected Result:
+	
+	+-----------+--------------+---------+---------+----------+
+	|business_id|full_address  |day      |open_time|close_time|
+	+-----------+--------------+---------+---------+----------+
+	|abc        |random_address|Friday   |11:00    |02:00     |
+	|abc        |random_address|Monday   |11:00    |02:00     |
+	|abc        |random_address|Saturday |11:00    |02:00     |
+	|abc        |random_address|Sunday   |11:00    |00:00     |
+	|abc        |random_address|Thursday |11:00    |02:00     |
+	|abc        |random_address|Tuesday  |11:00    |02:00     |
+	|abc        |random_address|Wednesday|11:00    |02:00     |
+	+-----------+--------------+---------+---------+----------+
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
